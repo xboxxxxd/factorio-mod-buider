@@ -1,0 +1,28 @@
+Entity : +type; +name; icon; order
+	AbstractItem : flags; subgroup; stack_size;
+		Module : effect; productivity; consumption; speed; pollution; bonus;
+		Item : +stack_size; +place_result
+
+		
+		
+		
+		
+Zerlegung
+
+1)
+In tokens zelegen
+
+2)
+Tokens grupiren
+
+3)Grupirungen einorden
+
+4)Verwetbare gruppen wegspeichern
+
+
+
+		
+Datei Typen
+	png
+	cfg für namen
+	
