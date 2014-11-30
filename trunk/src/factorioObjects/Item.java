@@ -34,10 +34,10 @@ public class Item extends Prototype{
 	}
 	@Override
 	public void loadInfoFromMod(ModInfo modInfo, int startIndex, int endIndex, ArrayList<String> file, String pfad) {
-		Logger.logInfo("Item", "loadInfoFromMod", "FoundItem", startIndex + " - " + endIndex);
+		//Logger.logInfo("Item", "loadInfoFromMod", "FoundItem", startIndex + " - " + endIndex);
 		Item modul = new Item(pfad);
 		modul.loadInfo(modInfo, modul, startIndex, endIndex, file, pfad);
 		modInfo.entityTypeList.get(type_).put(modul.entityInfo.get(name), modul);
-		Logger.logInfo("Item", "loadInfoFromMod", "LoadedItem", modInfo.entityTypeList.get(type_).keySet().toString());
+		//Logger.logInfo("Item", "loadInfoFromMod", "LoadedItem", modInfo.entityTypeList.get(type_).keySet().toString());
 	}
 }

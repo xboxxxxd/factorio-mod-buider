@@ -49,14 +49,14 @@ public class Module extends AbstractItem {
 	}
 	@Override
 	public void loadInfoFromMod(ModInfo modInfo, int startIndex, int endIndex,ArrayList<String> file, String pfad) {
-		Logger.logInfo("Module", "loadInfoFromMod", "FoundModule", startIndex + " - " + endIndex);
+		//Logger.logInfo("Module", "loadInfoFromMod", "FoundModule", startIndex + " - " + endIndex);
 		Module modul = new Module(pfad);
 		modul.loadInfo(modInfo, modul, startIndex, endIndex, file, pfad);
 		modInfo.entityTypeList.get(type_).put(modul.entityInfo.get(name), modul);
-		Logger.logInfo("Module", "loadInfoFromMod", "LoadedModule", modInfo.entityTypeList.get(type_).keySet().toString());
+		//Logger.logInfo("Module", "loadInfoFromMod", "LoadedModule", modInfo.entityTypeList.get(type_).keySet().toString());
 	}
 	public boolean advanceProcessingfromLine(ModInfo modInfo, Prototype entity, String atributArt, String atributValue){
-		Logger.logErrorMod("Module", "AdvancedProcessing", "try process", ":"+ atributValue);
+		//Logger.logErrorMod("Module", "AdvancedProcessing", "try process", ":"+ atributValue);
 		if(atributArt.equals(effect)){
 			String[] spliteffect = atributValue.replace("{", "").replace("}", "").split(",");
 			String[] splitbonus;
@@ -65,7 +65,7 @@ public class Module extends AbstractItem {
 				if(splitbonus.length == 3 && needsAdvanceProcessing.containsKey(splitbonus[0].trim())){
 					entity.entityInfo.put(splitbonus[0].trim(), splitbonus[2].trim());
 				}else{
-					Logger.logErrorMod("Module", "AdvancedProcessing", "coud not split spliteffect", ":"+ atributValue);
+					//Logger.logErrorMod("Module", "AdvancedProcessing", "coud not split spliteffect", ":"+ atributValue);
 				}
 			}
 			return true;

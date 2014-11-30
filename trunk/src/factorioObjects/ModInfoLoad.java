@@ -31,7 +31,7 @@ public class ModInfoLoad {
 				modInfo.infoParts.put(infoline[0].trim(), infoline[1].replace("\",", "").trim());
 			} else if(infoline.length == 1 && (infoline[0].trim().equals("}") || infoline[0].trim().equals("{") || infoline[0].trim().equals(""))){
 			} else {
-				Logger.logErrorMod("ModInfoLoad", "loadInfo", "InfoFiel Line konnte nicht gelesen werden", text);
+				//Logger.logErrorMod("ModInfoLoad", "loadInfo", "InfoFiel Line konnte nicht gelesen werden", text);
 			}
 		}
 	}
