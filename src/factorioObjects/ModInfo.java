@@ -31,7 +31,7 @@ public class ModInfo {
 	public ArrayList<String> posibleEntityInfo;
 	
 	public ModInfo(String pfad) {
-		Logger.logJustSo("ModInfo", "ModInfo", "Constructor", "Start");
+		//Logger.logJustSo("ModInfo", "ModInfo", "Constructor", "Start");
 		this.pfad = pfad;
 		this.nummber = -1;
 		this.infoParts = new HashMap<String, String>();
@@ -44,11 +44,11 @@ public class ModInfo {
 		this.posibleEntityInfo.add(homepage_);
 		this.posibleEntityInfo.add(description_);
 		this.posibleEntityInfo.add(dependencies_);
-		Logger.logJustSo("ModInfo", "ModInfo", "Register Types", "Start");
+		//Logger.logJustSo("ModInfo", "ModInfo", "Register Types", "Start");
 		this.entityTypeList = new HashMap<String, HashMap<String, IPrototype>>();
 		registerType(entityTypeList, new Module(null));
 		registerType(entityTypeList, new Item(null));
-		Logger.logJustSo("ModInfo", "ModInfo", "Register Types End", entityTypeList.keySet().toString());
+		//Logger.logJustSo("ModInfo", "ModInfo", "Register Types End", entityTypeList.keySet().toString());
 	}
 	
 	public void loadInfo() {
@@ -95,7 +95,7 @@ public class ModInfo {
 			System.out.println(dummyType.sortorder);
 			System.out.println(dummyType.entityInfo.get(Entity.type));
 			System.out.println(dummyType.entityInfo.get(Entity.name));
-			Logger.logAll("ModInfo", "getDiffrintModTypes", "Sort", dummyType.sortorder + ":" + dummyType.entityInfo.get(Entity.type) + ":" +  dummyType.entityInfo.get(Entity.name));
+			//Logger.logAll("ModInfo", "getDiffrintModTypes", "Sort", dummyType.sortorder + ":" + dummyType.entityInfo.get(Entity.type) + ":" +  dummyType.entityInfo.get(Entity.name));
 			
 		}*/
 		
@@ -118,7 +118,7 @@ public class ModInfo {
 			modEntitys.addAll(this.entityTypeList.get(list.get(index)).values());
 			modEntitys.remove(this.entityTypeList.get(list.get(index)).get(dummykey_));
 			for(IPrototype iEntity : modEntitys){
-				Logger.logAll("ModInfo", "getEntitysFromType", "Load from Module", iEntity.toString());
+				//Logger.logAll("ModInfo", "getEntitysFromType", "Load from Module", iEntity.toString());
 				selectedModEntitys.add(iEntity.toString());
 			}
 		}
@@ -127,7 +127,7 @@ public class ModInfo {
 	}
 
 	public void registerType(Map<String, HashMap<String, IPrototype>> entityTypeList_, IPrototype dummy){
-		Logger.logAll("ModInfo", "registerType", "Usabal Data", dummy.getType_() + " : " + (dummy == null) + " : " + dummy.getType() + " : " + dummy.getName());
+		//Logger.logAll("ModInfo", "registerType", "Usabal Data", dummy.getType_() + " : " + (dummy == null) + " : " + dummy.getType() + " : " + dummy.getName());
 		entityTypeList_.put(dummy.getType_(), new HashMap<String, IPrototype>());
 		entityTypeList_.get(dummy.getType_()).put(dummykey_, dummy);
 		dummy.getEntityInfo().put(dummy.getType(), dummy.getType_());

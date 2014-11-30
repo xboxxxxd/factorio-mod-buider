@@ -10,7 +10,7 @@ import logger.Logger;
 public class ModInfoLoadModEntitys {
 
 	public static void loadModEntitys(ModInfo modInfo) {
-		Logger.logInfo("ModInfoLoadModEntitys", "loadModEntitys", "Loding now", modInfo.pfad);
+		//Logger.logInfo("ModInfoLoadModEntitys", "loadModEntitys", "Loding now", modInfo.pfad);
 		for(File file : listDir(modInfo.pfad + "\\" + modInfo.prototyps_)){
 			loadModEntitys(modInfo, file.toString());
 		}
@@ -20,7 +20,7 @@ public class ModInfoLoadModEntitys {
 		//TEST
 		LuaDescriptiveFile test = LuaFileLoader.loadLuaFile( pfad);
 		/*
-		Logger.logInfo("loadModEntitys", "loadModEntitys", "Loding now", pfad);
+		//Logger.logInfo("loadModEntitys", "loadModEntitys", "Loding now", pfad);
 		ArrayList<String> file = new ArrayList<String>();
 		ArrayList<Integer> startlines = new ArrayList<Integer>();
 		
@@ -41,22 +41,22 @@ public class ModInfoLoadModEntitys {
 			}
 			reader.close();
 		} catch (IOException e) {
-			Logger.logErrorFatale("ModInfoLoadModEntitys", "loadEntityInfo", "IOException", "Load Mod Fiele not Found: " + pfad);
+			//Logger.logErrorFatale("ModInfoLoadModEntitys", "loadEntityInfo", "IOException", "Load Mod Fiele not Found: " + pfad);
 		}
 		
-		Logger.logInfo("ModInfoLoadModEntitys", "Startlines", "Raw List", startlines.toString());
-		Logger.logAll("ModInfoLoadModEntitys", "Startlines", "Type List", modInfo.entityTypeList.keySet().toString());
+		//Logger.logInfo("ModInfoLoadModEntitys", "Startlines", "Raw List", startlines.toString());
+		//Logger.logAll("ModInfoLoadModEntitys", "Startlines", "Type List", modInfo.entityTypeList.keySet().toString());
 		//Finde Ladbare Startlines
 		//TODOO CHExk list
 		for(int index = startlines.size() - 1; index >= 0; index--){
 			String type = file.get(startlines.get(index)).split("=")[1].trim().replace("\",", "\"");
-		Logger.logAll("ModInfoLoadModEntitys", "Startlines", "Raw List", type);	
+		//Logger.logAll("ModInfoLoadModEntitys", "Startlines", "Raw List", type);	
 			HashMap<String, IPrototype> entityList = modInfo.entityTypeList.get(type);
 			if(entityList == null){
 				startlines.remove(index);
 			}
 		}	
-		Logger.logInfo("ModInfoLoadModEntitys", "Startlines", "Updated List", startlines.toString());
+		//Logger.logInfo("ModInfoLoadModEntitys", "Startlines", "Updated List", startlines.toString());
 		//Alle Was Gelanden werden kann laden Laden
 		startlines.add(file.size());
 		for(int index = 0;  index < startlines.size() - 1; index++){
@@ -64,7 +64,7 @@ public class ModInfoLoadModEntitys {
 			modInfo.entityTypeList.get(type).get(modInfo.dummykey_).loadInfoFromMod(modInfo, startlines.get(index), startlines.get(index+1), file, pfad);
 		}
 		*/
-		Logger.logInfo("ModInfoLoadModEntitys", "loadModEntitys", "Ende", "Ende");
+		//Logger.logInfo("ModInfoLoadModEntitys", "loadModEntitys", "Ende", "Ende");
 	}
 
 	public static ArrayList<File> listDir(String dir) {

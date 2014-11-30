@@ -18,7 +18,6 @@ public class RunProgramm {
 	public final long FIVE_S_IN_MS = 5000;
 	public Logger logger;
 	
-	
 	private String path;
 	private File[] modList;
 	
@@ -40,11 +39,10 @@ public class RunProgramm {
 	public File[] getModArray() { return modList; }
 	public void setModArray(File[] modArray) { this.modList = modArray; }
 	
-	//RUN
 	public void run() {
 		setPath(getPath().replace("//", "////"));
 		setPath(pfade.Pfade.MEINPFAD);
-		logger = new Logger(path, Priority.JUSTSO);
+		Logger.init(path + "\\Factorio_Mod_Builder", Priority.JUSTSO, Priority.JUSTSO);
 		oeffneGuiMenue();
 		oeffneGuiModlist();
 	}
@@ -98,7 +96,7 @@ public class RunProgramm {
 		for(String key : guiEntityInfoList.keySet()){
 			guiEntityInfoList.get(key).dispose();
 		}
-		logger.closeFile();
+		Logger.closeFile();
 	}
 	
 	
@@ -117,9 +115,9 @@ public class RunProgramm {
 	 */
 	public void oeffneGuiModInfo(List<File> selectedValuesList) {
 		for(File file : selectedValuesList){
-			Logger.logAll("RunProgramm", "oeffneGuiModInfo", "Test", "Constructor info next");
+			Logger.log(Priority.DEBUG,"RunProgramm", "oeffneGuiModInfo", "Test", "Constructor info next");
 			ModInfo modInfo = new ModInfo(file.toString());
-			Logger.logAll("RunProgramm", "oeffneGuiModInfo", "Test", modInfo.entityTypeList.keySet().toString() + " " + (modInfo == null) + " " + (modInfo.equals(null)));
+			Logger.log(Priority.DEBUG,"RunProgramm", "oeffneGuiModInfo", "Test", modInfo.entityTypeList.keySet().toString() + " " + (modInfo == null) + " " + (modInfo.equals(null)));
 			modInfoList.put(modInfo.pfad, modInfo);
 			oeffneGuiModInfo(modInfo);
 		}

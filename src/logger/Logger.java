@@ -10,140 +10,79 @@ import java.text.SimpleDateFormat;
 
 public class Logger {
 
-	private String speicherort;
-	private static Priority priority;
+	private static String speicherort;
+
+	private static Priority logPriority;
+
+	private static Priority consolePriority;
+	
 	private static PrintWriter writer = null;
-	private SimpleDateFormat simple1 = new SimpleDateFormat("dd MM yyyy HH mm ss");
+	
+	private static SimpleDateFormat simple1 = new SimpleDateFormat("dd MM yyyy HH mm ss");
+	
 	private static SimpleDateFormat simple2 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+	
+	private Logger() {}
 
-	public Logger(String path, Priority messagePriority) {
-		this.speicherort = path + "\\Factorio_Mod_Builder";
-		Logger.priority = messagePriority;
-		init();
-		System.out.println(speicherort);
-	}
-
-	// Erzeugen
-	private void init() {
+	/**
+	 * public static Logger init
+	 * @param path Path fuer die Datei
+	 * @param logPriority minimum Priority to print
+	 * @param consolePriority minimum Priority to print
+	 */
+	public static void init(String path, Priority logPriority, Priority consolePriority) {
+		
+		Logger.logPriority = logPriority;
+		Logger.consolePriority = consolePriority;
+		
 		Timestamp time = new Timestamp(System.currentTimeMillis());
 		String daytime = simple1.format(time);
 		File dataFile = new File(speicherort);
 		dataFile.mkdir();
+		
+		System.out.println("Logger init Speicherort:" + speicherort);
+		String string = speicherort + "\\Benutzer Log " + daytime + ".txt";
+		System.out.println("Logger init Speicherort:" + string);
+		
 		try {
-			System.out.println(speicherort);
-			String string = speicherort + "\\Benutzer Log " + daytime + ".txt";
-			System.out.println(string);
 			writer = new PrintWriter(new BufferedWriter(new FileWriter(string)));
 		} catch (IOException e) {
+			System.out.println("Failld to init logger IOException");
 			e.printStackTrace();
 		}
 	}
 
-	// Schliessen des Writers
-	public void closeFile() {
+	public static void closeFile() {
 		writer.close();
 	}
 	
-	private static void log(Priority messagePriority, String text) {
-		if (messagePriority.compareTo(priority) < 0) {
-			return;
-		}
+	private static void log(Priority messagePriority, String line) {
+		
 		Timestamp time = new Timestamp(System.currentTimeMillis());
 		String daytime = simple2.format(time);
-		System.out.println(daytime + " : " + text);
-		writer.println(daytime + " : " + messagePriority + " : " +text);
-		writer.flush();
-	}
-
-	/**
-	 * Der Logger
-	 * 
-	 * @param klasse
-	 * @param was
-	 * @param nachricht
-	 */
-	public static void log(Priority messagePriority, String klasse, String was,
-			String nachricht) {
-		log(messagePriority, klasse + " -> " + was + " -> " + nachricht);
-	}
-	
-	/**
-	 * 
-	 * @param messagePriority
-	 * @param klasse
-	 * @param was
-	 * @param warum
-	 * @param nachricht
-	 */
-	public static void logAll(String klasse, String was, String warum,
-			String nachricht) {
-		log(Priority.ALL, klasse + " -> " + was + " : " + warum + " -> "
-				+ nachricht);
+		String massage = daytime + " : " + messagePriority + " : " + line;
+		
+		if ((messagePriority.compareTo(logPriority) >= 0)  && (messagePriority.compareTo(consolePriority) >= 0)) {
+			System.out.println(massage);
+			writer.println(massage);
+			writer.flush();
+		} else if (messagePriority.compareTo(logPriority) >= 0) {
+			writer.println(massage);
+			writer.flush();
+		} else if (messagePriority.compareTo(consolePriority) >= 0) {
+			System.out.println(massage);
+		}
 	}
 
 	/**
 	 * 
 	 * @param messagePriority
 	 * @param klasse
-	 * @param was
+	 * @param method
 	 * @param warum
 	 * @param nachricht
 	 */
-	public static void logJustSo(String klasse, String was, String warum,
-			String nachricht) {
-		log(Priority.JUSTSO, klasse + " -> " + was + " : " + warum + " -> "
-				+ nachricht);
-	}
-
-	/**
-	 * 
-	 * @param klasse
-	 * @param was
-	 * @param warum
-	 * @param nachricht
-	 */
-	public static void logInfo(String klasse, String was, String warum,
-			String nachricht) {
-		log(Priority.INFO, klasse + " -> " + was + " : " + warum + " -> "
-				+ nachricht);
-	}
-
-	/**
-	 * 
-	 * @param klasse
-	 * @param was
-	 * @param warum
-	 * @param nachricht
-	 */
-	public static void logErrorMod(String klasse, String was, String warum,
-			String nachricht) {
-		log(Priority.ERRORMOD, klasse + " -> " + was + " : " + warum + " -> "
-				+ nachricht);
-	}
-
-	/**
-	 * 
-	 * @param klasse
-	 * @param was
-	 * @param warum
-	 * @param nachricht
-	 */
-	public static void logErrorCode(String klasse, String was, String warum,
-			String nachricht) {
-		log(Priority.ERRORCODE, klasse + " -> " + was + " : " + warum + " -> "
-				+ nachricht);
-	}
-
-	/**
-	 * 
-	 * @param klasse
-	 * @param was
-	 * @param warum
-	 * @param nachricht
-	 */
-	public static void logErrorFatale(String klasse, String was, String warum,
-			String nachricht) {
-		log(Priority.ERRORFATALE, klasse + " -> " + was + " : " + warum
-				+ " -> " + nachricht);
+	public static void log(Priority messagePriority, String klasse, String method, String warum, String nachricht) {
+		log(messagePriority, klasse + " -> " + method + " : " + warum + " -> " + nachricht);
 	}
 }
