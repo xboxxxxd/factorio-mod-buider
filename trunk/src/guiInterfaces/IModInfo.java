@@ -1,4 +1,4 @@
-package GuiInterfaces;
+package guiInterfaces;
 
 public interface IModInfo {
 
