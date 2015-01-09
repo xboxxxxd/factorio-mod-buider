@@ -15,7 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
-import startup.RunProgramm;
+import startup.Controller;
 import factorioObjects.ModInfo;
 
 
@@ -23,7 +23,7 @@ public class GuiModInfo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private RunProgramm runProgramm;
+	private Controller runProgramm;
 	private ModInfo modInfo;
 	private JList<String> list;
 	private final Action action = new SwingAction();
@@ -34,7 +34,7 @@ public class GuiModInfo extends JFrame {
 	 * @param modInfo 
 	 * @param runProgramm 
 	 */
-	public GuiModInfo(RunProgramm runProgramm, ModInfo modInfo) {
+	public GuiModInfo(Controller runProgramm, ModInfo modInfo) {
 		this.runProgramm = runProgramm;
 		this.modInfo = modInfo;
 		setBounds(100, 100, 520, 300);

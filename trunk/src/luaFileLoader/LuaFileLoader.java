@@ -6,13 +6,11 @@ public class LuaFileLoader {
 	 * 
 	 * @param file the path of the Files
 	 */
-	public void loadLuaFile(String file) {
+	public static void loadLuaFile(String file) {
 		
 		
 		
 		
-		
-		
-		
+	
 	}
 }

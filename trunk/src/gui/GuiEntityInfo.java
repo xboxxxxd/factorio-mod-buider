@@ -17,13 +17,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import startup.RunProgramm;
+import startup.Controller;
 import factorioObjects.ModInfo;
 
 public class GuiEntityInfo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private RunProgramm runProgramm;
+	private Controller runProgramm;
 	private ModInfo modInfo;
 	private JPanel contentPane;
 	private JList<String> list;
@@ -36,7 +36,7 @@ public class GuiEntityInfo extends JFrame {
 	 * @param modInfo 
 	 * @param runProgramm 
 	 */
-	public GuiEntityInfo(RunProgramm runProgramm, final ModInfo modInfo) {
+	public GuiEntityInfo(Controller runProgramm, final ModInfo modInfo) {
 		this.runProgramm = runProgramm;
 		this.modInfo = modInfo;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

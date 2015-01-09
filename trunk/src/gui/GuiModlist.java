@@ -15,13 +15,13 @@ import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
-import startup.RunProgramm;
+import startup.Controller;
 
 public class GuiModlist extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private RunProgramm runProgramm;
+	private Controller runProgramm;
 	private final Action action = new SwingAction();
 	private final Action action_1 = new SwingAction_1();
 	private JList<File> list;
@@ -31,7 +31,7 @@ public class GuiModlist extends JFrame {
 	 * 
 	 * @param runProgramm
 	 */
-	public GuiModlist(RunProgramm runProgramm) {
+	public GuiModlist(Controller runProgramm) {
 		this.runProgramm = runProgramm;
 		setBounds(100, 100, 600, 600);
 		contentPane = new JPanel();

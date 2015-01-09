@@ -5,6 +5,7 @@ import gui.GuiEntityInfo;
 import gui.GuiMenue;
 import gui.GuiModInfo;
 import gui.GuiModlist;
+import gui.GuiPathChoice;
 
 import java.io.File;
 import java.util.HashMap;
@@ -13,28 +14,39 @@ import java.util.List;
 import logger.Logger;
 import logger.Priority;
 
-public class RunProgramm {
+public class Controller {
 
 	public final long FIVE_S_IN_MS = 5000;
 	public Logger logger;
 	
-	private String path;
-	private File[] modList;
+	private static String path;
+	private static File[] modList;
 	
-	private GuiMenue guiMenue;
-	private GuiModlist guiModlist;
-	private HashMap<String, ModInfo> modInfoList;
-	private HashMap<String, GuiModInfo> guiModInfoList;
-	private HashMap<String, GuiEntityInfo> guiEntityInfoList;
+	private static GuiMenue guiMenue;
+	private static GuiModlist guiModlist;
+	private static HashMap<String, ModInfo> modInfoList;
+	private static HashMap<String, GuiModInfo> guiModInfoList;
+	private static HashMap<String, GuiEntityInfo> guiEntityInfoList;
 	
-	public RunProgramm(){
-		guiModInfoList = new HashMap<String, GuiModInfo>();
-		modInfoList = new HashMap<String, ModInfo>();
-		guiEntityInfoList = new HashMap<String, GuiEntityInfo>();
+	private Controller(){
+		Controller.guiModInfoList = new HashMap<String, GuiModInfo>();
+		Controller.modInfoList = new HashMap<String, ModInfo>();
+		Controller.guiEntityInfoList = new HashMap<String, GuiEntityInfo>();
 	}
+	
+	public static void init(){
+		new Controller();
+	}
+	
+	public static void main(String[] args) {
+		Controller.init();
+		GuiPathChoice guiPathChoice = new GuiPathChoice();
+		guiPathChoice.setVisible(true);
+	}
+	
 
-	public String getPath() { return path; }
-	public void setPath(String path) { this.path = path; }
+	public static String getPath() { return Controller.path; }
+	public static void setPath(String path) { Controller.path = path; }
 	
 	public File[] getModArray() { return modList; }
 	public void setModArray(File[] modArray) { this.modList = modArray; }
@@ -104,7 +116,7 @@ public class RunProgramm {
 	 * Öffnet die Gui für die Mods
 	 */
 	public void actuallisire_modordner(){
-		File file = new File(this.getPath());
+		File file = new File(Controller.getPath());
 		modList = file.listFiles();
 		if(guiModlist != null){ guiModlist.aktuallisireListe(); }
 	}
