@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import startup.RunProgramm;
+import startup.Controller;
 
 public class GuiMenue extends JFrame {
 
@@ -20,12 +20,12 @@ public class GuiMenue extends JFrame {
 	private JPanel contentPane;
 	private final Action action = new SwingAction();
 	private final Action action_1 = new SwingAction_1();
-	private RunProgramm runprogramm;
+	private Controller runprogramm;
 	
 	/**
 	 * Create the frame.
 	 */
-	public GuiMenue(RunProgramm runprogramm) {
+	public GuiMenue(Controller runprogramm) {
 		this.runprogramm = runprogramm;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);

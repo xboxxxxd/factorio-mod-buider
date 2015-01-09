@@ -18,7 +18,8 @@ public class ModInfoLoadModEntitys {
 
 	private static void loadModEntitys(ModInfo modInfo, String pfad) {
 		//TEST
-		LuaDescriptiveFile test = LuaFileLoader.loadLuaFile( pfad);
+		//LuaDescriptiveFile test = 
+		LuaFileLoader.loadLuaFile( pfad);
 		/*
 		//Logger.logInfo("loadModEntitys", "loadModEntitys", "Loding now", pfad);
 		ArrayList<String> file = new ArrayList<String>();

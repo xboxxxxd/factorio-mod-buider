@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import startup.RunProgramm;
+import startup.Controller;
 
 public class GuiPathChoice extends JFrame {
 
@@ -23,7 +23,7 @@ public class GuiPathChoice extends JFrame {
 	private JTextField textField;
 	private final Action ok = new SwingAction();
 	private final Action cancel = new SwingAction_1();
-	private RunProgramm runprogramm;
+	private Controller runprogramm;
 	private JButton okButton;
 	private JButton cancelButton;
 
@@ -31,7 +31,7 @@ public class GuiPathChoice extends JFrame {
 	 * Create the dialog.
 	 * @param runprogramm
 	 */
-	public GuiPathChoice(RunProgramm runprogramm) {
+	public GuiPathChoice() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 100);
@@ -70,7 +70,7 @@ public class GuiPathChoice extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 			runprogramm.setPath(textField.getText());
-			runprogramm.run();//start();
+			runprogramm.run();
 			pathchoice.dispose();
 		}
 	}
