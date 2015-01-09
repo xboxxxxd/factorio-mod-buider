@@ -1,9 +1,9 @@
 package luaFileLoader;
 
-import static luaFileLoader.ScanState.COMMENT;
-import static luaFileLoader.ScanState.LONGCOMMAND;
-import static luaFileLoader.ScanState.OTHER;
-import static luaFileLoader.ScanState.STRING;
+import static luaFileLoader.LuaTokenLoaderState.COMMENT;
+import static luaFileLoader.LuaTokenLoaderState.LONGCOMMAND;
+import static luaFileLoader.LuaTokenLoaderState.OTHER;
+import static luaFileLoader.LuaTokenLoaderState.STRING;
 import logger.Logger;
 import logger.Priority;
 
@@ -24,9 +24,9 @@ public class LuaTokenLoader {
 	public String getToken(){
 		
 		boolean wait_for_token = true;
-		String single = null;
+		String single = "";
 		String collector = "";
-		ScanState state = OTHER;
+		LuaTokenLoaderState state = OTHER;
 		
 		while (wait_for_token) {
 			
@@ -49,14 +49,14 @@ public class LuaTokenLoader {
 				} else
 				//lock for a whitespace
 				if( single.equals("\t") || single.equals("\b") || single.equals("\n") || 
-					single.equals("\r") || single.equals("\f")) {	
+					single.equals("\r") || single.equals("\f") || single.equals(" " ) ){	
 					break;
 				} else
 				//Look for a next token Charater	
 				if(	single.equals(".") || single.equals(":") || single.equals("(") || single.equals(")") || 
 					single.equals("{") || single.equals("}") || single.equals("[") || single.equals("]") ||
 					single.equals("+") || single.equals("-") || single.equals("*") || single.equals("/") || 
-					single.equals("=") || single.equals(",") || single.equals(";")) {
+					single.equals("=") || single.equals(",") || single.equals(";") ){
 					if(collector.isEmpty()){
 						return single;
 					} else {
