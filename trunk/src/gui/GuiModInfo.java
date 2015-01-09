@@ -23,7 +23,6 @@ public class GuiModInfo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private Controller runProgramm;
 	private ModInfo modInfo;
 	private JList<String> list;
 	private final Action action = new SwingAction();
@@ -32,10 +31,8 @@ public class GuiModInfo extends JFrame {
 	/**
 	 * Create the frame.
 	 * @param modInfo 
-	 * @param runProgramm 
 	 */
-	public GuiModInfo(Controller runProgramm, ModInfo modInfo) {
-		this.runProgramm = runProgramm;
+	public GuiModInfo(ModInfo modInfo) {
 		this.modInfo = modInfo;
 		setBounds(100, 100, 520, 300);
 		contentPane = new JPanel();
@@ -117,8 +114,8 @@ public class GuiModInfo extends JFrame {
 	}
 	
 	public void actualisireListe(){
+		modInfo.loadInfo();
 		list.removeAll();
-		runProgramm.loadModInfo(modInfo);
 		list.setListData(modInfo.listInfo());
 	}
 	
@@ -139,7 +136,7 @@ public class GuiModInfo extends JFrame {
 			putValue(SHORT_DESCRIPTION, "Open Entity List");
 		}
 		public void actionPerformed(ActionEvent e) {
-			runProgramm.openEntityList(modInfo);
+			Controller.openEntityList(modInfo);
 		}
 	}
 }

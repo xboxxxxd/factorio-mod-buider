@@ -31,7 +31,7 @@ public class ModInfo {
 	public ArrayList<String> posibleEntityInfo;
 	
 	public ModInfo(String pfad) {
-		//Logger.logJustSo("ModInfo", "ModInfo", "Constructor", "Start");
+		Logger.logJUSTSO("ModInfo", "ModInfo", "Constructor", "Start");
 		this.pfad = pfad;
 		this.nummber = -1;
 		this.infoParts = new HashMap<String, String>();
@@ -44,11 +44,11 @@ public class ModInfo {
 		this.posibleEntityInfo.add(homepage_);
 		this.posibleEntityInfo.add(description_);
 		this.posibleEntityInfo.add(dependencies_);
-		//Logger.logJustSo("ModInfo", "ModInfo", "Register Types", "Start");
+		Logger.logJUSTSO("ModInfo", "ModInfo", "Register Types", "Start");
 		this.entityTypeList = new HashMap<String, HashMap<String, IPrototype>>();
 		registerType(entityTypeList, new Module(null));
 		registerType(entityTypeList, new Item(null));
-		//Logger.logJustSo("ModInfo", "ModInfo", "Register Types End", entityTypeList.keySet().toString());
+		Logger.logJUSTSO("ModInfo", "ModInfo", "Register Types End", entityTypeList.keySet().toString());
 	}
 	
 	public void loadInfo() {

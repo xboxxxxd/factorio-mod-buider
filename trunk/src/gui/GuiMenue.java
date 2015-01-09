@@ -20,13 +20,12 @@ public class GuiMenue extends JFrame {
 	private JPanel contentPane;
 	private final Action action = new SwingAction();
 	private final Action action_1 = new SwingAction_1();
-	private Controller runprogramm;
 	
 	/**
 	 * Create the frame.
 	 */
-	public GuiMenue(Controller runprogramm) {
-		this.runprogramm = runprogramm;
+	public GuiMenue() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -34,7 +33,6 @@ public class GuiMenue extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		this.runprogramm = runprogramm;
 		
 		JButton btnOpenModlist = new JButton("Open Modlist");
 		btnOpenModlist.setAction(action);
@@ -54,7 +52,7 @@ public class GuiMenue extends JFrame {
 			putValue(SHORT_DESCRIPTION, "OpenModlist");
 		}
 		public void actionPerformed(ActionEvent e) {
-			runprogramm.oeffneGuiModlist();
+			Controller.oeffneGuiModlist();
 		}
 	}
 	private class SwingAction_1 extends AbstractAction {
@@ -64,7 +62,7 @@ public class GuiMenue extends JFrame {
 			putValue(SHORT_DESCRIPTION, "Save And End");
 		}
 		public void actionPerformed(ActionEvent e) {
-			runprogramm.closeAll();
+			Controller.closeAll();
 		}
 	}
 }

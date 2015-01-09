@@ -43,71 +43,84 @@ public class Controller {
 		GuiPathChoice guiPathChoice = new GuiPathChoice();
 		guiPathChoice.setVisible(true);
 	}
-	
 
 	public static String getPath() { return Controller.path; }
 	public static void setPath(String path) { Controller.path = path; }
 	
-	public File[] getModArray() { return modList; }
-	public void setModArray(File[] modArray) { this.modList = modArray; }
+	public static File[] getModArray() { return Controller.modList; }
+	public static void setModArray(File[] modArray) { Controller.modList = modArray; }
 	
-	public void run() {
-		setPath(getPath().replace("//", "////"));
-		setPath(pfade.Pfade.MEINPFAD);
-		Logger.init(path + "\\Factorio_Mod_Builder", Priority.JUSTSO, Priority.JUSTSO);
-		oeffneGuiMenue();
-		oeffneGuiModlist();
+	public static void run() {
+		//setPath(getPath().replace("//", "////"));
+		Controller.setPath(pfade.Pfade.MEINPFAD2);
+		Logger.init(Controller.path, Priority.INFO, Priority.INFO);
+		Controller.oeffneGuiMenue();
+		Controller.oeffneGuiModlist();
+		Logger.logINFO("Controler", "oeffneGuiMenue", "start", "end");
 	}
 	
 	//GuiMangement
-	public void oeffneGuiMenue(){
-		if(guiMenue == null){ guiMenue = new GuiMenue(this); }
+	public static void oeffneGuiMenue(){
+		Logger.logINFO("Controler", "oeffneGuiMenue", "start", "start");
+		if(guiMenue == null){ guiMenue = new GuiMenue(); }
 		guiMenue.setVisible(true);
 	}
 	
 	public void schliesseGuiMenue(){
+		Logger.logINFO("Controler", "schliesseGuiMenue", "start", "start");
 		if(guiMenue != null){ guiMenue.setVisible(false); }
 	}
 	
-	public void oeffneGuiModlist(){
-		if(guiModlist == null){ guiModlist = new GuiModlist(this); }
+	public static void oeffneGuiModlist(){
+		Logger.logINFO("Controler", "oeffneGuiModlist", "start", "start");
+		if(guiModlist == null){ guiModlist = new GuiModlist(); }
 		guiModlist.setVisible(true);
 		actuallisire_modordner();
 	}
 	
 	public void schliesseGuiModInfo(){
+		Logger.logINFO("Controler", "schliesseGuiModInfo", "start", "start");
 		//TODO
 	}
 	
-	public void oeffneGuiModInfo(ModInfo modInfo){
-		if(guiModInfoList.get(modInfo.pfad) == null){ guiModInfoList.put(modInfo.pfad, new GuiModInfo(this, modInfo)); modInfo.loadInfo();}
+	public static void oeffneGuiModInfo(ModInfo modInfo){
+		Logger.logINFO("Controler", "oeffneGuiModInfo", "start", "start");
+		if(guiModInfoList.get(modInfo.pfad) == null){ guiModInfoList.put(modInfo.pfad, new GuiModInfo(modInfo)); modInfo.loadInfo();}
 		guiModInfoList.get(modInfo.pfad).setVisible(true);
 	}
 	
 	public void schliesseGuiModlist(ModInfo modInfo){
+		Logger.logINFO("Controler", "schliesseGuiModlist", "start", "start");
 		if(guiModInfoList.get(modInfo.pfad) != null){ guiModInfoList.get(modInfo.pfad).setVisible(false); }
 	}
 	
-	public void oeffneGuiEntityInfo(ModInfo modInfo){
-		if(guiEntityInfoList.get(modInfo.pfad) == null){ guiEntityInfoList.put(modInfo.pfad, new GuiEntityInfo(this, modInfo)); modInfo.loadInfo();}
+	public static void oeffneGuiEntityInfo(ModInfo modInfo){
+		Logger.logINFO("Controler", "oeffneGuiEntityInfo", "start", "start");
+		if(guiEntityInfoList.get(modInfo.pfad) == null){ guiEntityInfoList.put(modInfo.pfad, new GuiEntityInfo(modInfo)); modInfo.loadInfo();}
 		guiEntityInfoList.get(modInfo.pfad).setVisible(true);
 	}
 	
 	public void schliesseGuiEntitylist(ModInfo modInfo){
+		Logger.logINFO("Controler", "schliesseGuiEntitylist", "start", "start");
 		if(guiEntityInfoList.get(modInfo.pfad) != null){ guiEntityInfoList.get(modInfo.pfad).setVisible(false); }
 	}
 	
 	//Close all
-	public void closeAll() {
+	public static void closeAll() {
+		Logger.logINFO("Controler", "closeAll", "start", "start");
+		
 		if(guiMenue != null){ guiMenue.dispose(); }
 		if(guiModlist != null){ guiModlist.dispose(); }
 		
 		for(String key : guiModInfoList.keySet()){
 			guiModInfoList.get(key).dispose();
 		}
+		
 		for(String key : guiEntityInfoList.keySet()){
 			guiEntityInfoList.get(key).dispose();
 		}
+		
+		Logger.logINFO("Controler", "closeAll", "start", "end");
 		Logger.closeFile();
 	}
 	
@@ -115,7 +128,8 @@ public class Controller {
 	/**
 	 * Öffnet die Gui für die Mods
 	 */
-	public void actuallisire_modordner(){
+	public static void actuallisire_modordner(){
+		Logger.logINFO("Controler", "actuallisire_modordner", "start", "start");
 		File file = new File(Controller.getPath());
 		modList = file.listFiles();
 		if(guiModlist != null){ guiModlist.aktuallisireListe(); }
@@ -125,11 +139,12 @@ public class Controller {
 	 * Öffnet die Guis zu den Mod Ordnern
 	 * @param selectedValuesList
 	 */
-	public void oeffneGuiModInfo(List<File> selectedValuesList) {
+	public static void oeffneGuiModInfo(List<File> selectedValuesList) {
+		Logger.logINFO("Controler", "oeffneGuiModInfo", "start", "start");
 		for(File file : selectedValuesList){
-			Logger.log(Priority.DEBUG,"RunProgramm", "oeffneGuiModInfo", "Test", "Constructor info next");
+			Logger.log(Priority.DEBUG,"Controler", "oeffneGuiModInfo", "Test", "Constructor info next");
 			ModInfo modInfo = new ModInfo(file.toString());
-			Logger.log(Priority.DEBUG,"RunProgramm", "oeffneGuiModInfo", "Test", modInfo.entityTypeList.keySet().toString() + " " + (modInfo == null) + " " + (modInfo.equals(null)));
+			Logger.log(Priority.DEBUG,"Controler", "oeffneGuiModInfo", "Test", modInfo.entityTypeList.keySet().toString() + " " + (modInfo == null) + " " + (modInfo.equals(null)));
 			modInfoList.put(modInfo.pfad, modInfo);
 			oeffneGuiModInfo(modInfo);
 		}
@@ -139,18 +154,11 @@ public class Controller {
 	 * Laed fur das Gegebene ModInfo Object die Entitys
 	 * @param modInfo
 	 */
-	public void openEntityList(ModInfo modInfo) {
+	public static void openEntityList(ModInfo modInfo) {
+		Logger.logINFO("Controler", "openEntityList", "start", "start");
 		modInfo.loadEntityList();
-		oeffneGuiEntityInfo(modInfo);
+		Controller.oeffneGuiEntityInfo(modInfo);
+		Logger.logINFO("Controler", "openEntityList", "start", "end");
 	}
 	
-	/**
-	 * Laed fur das Gegebene ModInfo Object die Infos
-	 * @param modInfo
-	 */
-	public void loadModInfo(ModInfo modInfo) {
-		modInfo.loadInfo();
-	}
-
-
 }

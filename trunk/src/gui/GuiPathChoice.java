@@ -23,7 +23,6 @@ public class GuiPathChoice extends JFrame {
 	private JTextField textField;
 	private final Action ok = new SwingAction();
 	private final Action cancel = new SwingAction_1();
-	private Controller runprogramm;
 	private JButton okButton;
 	private JButton cancelButton;
 
@@ -41,7 +40,6 @@ public class GuiPathChoice extends JFrame {
 		contentPane.setLayout(null);
 		
 		this.pathchoice = this;
-		this.runprogramm = runprogramm;
 		
 		textField = new JTextField();
 		textField.setColumns(35);
@@ -69,8 +67,8 @@ public class GuiPathChoice extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			runprogramm.setPath(textField.getText());
-			runprogramm.run();
+			Controller.setPath(textField.getText());
+			Controller.run();
 			pathchoice.dispose();
 		}
 	}
@@ -85,7 +83,7 @@ public class GuiPathChoice extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			runprogramm.run();//start();
+			Controller.run();//start();
 			pathchoice.dispose();
 		}
 	}
