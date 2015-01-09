@@ -53,6 +53,10 @@ public class LuaDescriptiveFile {
 		return keyValue.get(index);
 	}
 	
+	public boolean hasKey(String key){
+		return (this.get(key) != null);
+	}
+	
 	public LuaDescriptiveFile get(String key){
 		for(LuaDescriptiveFile item : keyValue){
 			if(item.getKey().equals(key)){
