@@ -21,18 +21,14 @@ public class GuiModlist extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private Controller runProgramm;
 	private final Action action = new SwingAction();
 	private final Action action_1 = new SwingAction_1();
 	private JList<File> list;
 	
 	/**
 	 * Create the frame.
-	 * 
-	 * @param runProgramm
 	 */
-	public GuiModlist(Controller runProgramm) {
-		this.runProgramm = runProgramm;
+	public GuiModlist() {
 		setBounds(100, 100, 600, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -84,7 +80,7 @@ public class GuiModlist extends JFrame {
 			putValue(SHORT_DESCRIPTION, "Aktuallisire Liste");
 		}
 		public void actionPerformed(ActionEvent e) {
-			runProgramm.actuallisire_modordner();
+			Controller.actuallisire_modordner();
 		}
 	}
 	
@@ -100,11 +96,11 @@ public class GuiModlist extends JFrame {
 	}
 	
 	private void openMod() {
-		runProgramm.oeffneGuiModInfo(list.getSelectedValuesList());
+		Controller.oeffneGuiModInfo(list.getSelectedValuesList());
 	}
 
 	public void aktuallisireListe() {
 		list.removeAll();
-		list.setListData((runProgramm.getModArray()));
+		list.setListData(Controller.getModArray());
 	}
 }
