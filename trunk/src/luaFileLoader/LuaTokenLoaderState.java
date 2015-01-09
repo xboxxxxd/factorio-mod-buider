@@ -1,6 +1,6 @@
 package luaFileLoader;
 
-public enum ScanState {
+public enum LuaTokenLoaderState {
 
 	COMMENT,
 	LONGCOMMAND,
