@@ -16,21 +16,58 @@ public class LuaFileLoader {
 		LuaTokenLoader luaTokenLoader = new LuaTokenLoader(luaCharLoader);
 		LuaDescriptiveFile luaDescriptiveFile = new LuaDescriptiveFile(file);
 		
-		while (!luaTokenLoader.eof()) {
-			Logger.logDEBUG("LuaFileLoader", "loadLuaFile", "Token", luaTokenLoader.getToken());
-		}
+		LuaFileLoader.sortTokens(luaDescriptiveFile, luaTokenLoader, LuaFileLoaderState.NOSTATE);
+		
+		// while (!luaTokenLoader.eof()) {
+		//	Logger.logDEBUG("LuaFileLoader", "loadLuaFile", "Token", luaTokenLoader.getToken());
+		// }
 		
 		Logger.logDEBUG("LuaFileLoader", "loadLuaFile", "start", "end");
 	}
 	
 	
-	public static LuaDescriptiveFile sortTokens(LuaDescriptiveFile luaDescriptiveFile, LuaTokenLoader luaTokenLoader){
+	public static LuaDescriptiveFile sortTokens(LuaDescriptiveFile luaDescriptiveFile, LuaTokenLoader luaTokenLoader,  LuaFileLoaderState luaFileLoaderState){
+		Logger.logDEBUG("LuaFileLoader", "sortTokens", "start", "start");
 		
+		while (! luaTokenLoader.eof()) {
 		
+		String token = luaTokenLoader.getToken();
+		
+			switch (luaFileLoaderState){
+			
+			case NOSTATE :
+				if(token.equals("data")){
+					if (luaTokenLoader.getToken().equals(":")) {
+						if (luaTokenLoader.getToken().equals("extend")) {
+							Logger.logDEBUG("LuaFileLoader", "sortTokens", "State", LuaFileLoaderState.DATAEXTENDED.toString());
+							
+							LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile(LuaFileLoaderState.DATAEXTENDED.toString());
+							luaDescriptiveFile.add(luaDescriptiveFileNew);
+							LuaFileLoader.sortTokens(luaDescriptiveFileNew, luaTokenLoader, LuaFileLoaderState.DATAEXTENDED);
+							break;
+						}
+					}
+				}
+				break;
+				
+			case DATAEXTENDED :
+				
+				
+				break;
+				
+				
+			}		
+
+		}
+		
+		Logger.logDEBUG("LuaFileLoader", "sortTokens", "Token", "No More Token in file");
 		return luaDescriptiveFile;
 	}
 	
 	
+		
+		
+		
 	
 	
 }
