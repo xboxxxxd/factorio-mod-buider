@@ -16,10 +16,11 @@ import logger.Priority;
 
 public class Controller {
 
-	public final long FIVE_S_IN_MS = 5000;
-	public Logger logger;
+	public final static long FIVE_S_IN_MS = 5000;
 	
-	private static String path;
+	//Path to Modfolder
+	private static String[] path;
+	//Paths to Modfolders
 	private static File[] modList;
 	
 	private static GuiMenue guiMenue;
@@ -44,8 +45,8 @@ public class Controller {
 		guiPathChoice.setVisible(true);
 	}
 
-	public static String getPath() { return Controller.path; }
-	public static void setPath(String path) { Controller.path = path; }
+	public static String getPath() { return Controller.path[0]; }
+	public static void setPath(String path) { Controller.path[0] = path; }
 	
 	public static File[] getModArray() { return Controller.modList; }
 	public static void setModArray(File[] modArray) { Controller.modList = modArray; }
@@ -53,7 +54,7 @@ public class Controller {
 	public static void run() {
 		//setPath(getPath().replace("//", "////"));
 		Controller.setPath(pfade.Pfade.MEINPFAD2);
-		Logger.init(Controller.path, Priority.INFO, Priority.INFO);
+		Logger.init(Controller.getPath(), Priority.INFO, Priority.INFO);
 		Controller.oeffneGuiMenue();
 		Controller.oeffneGuiModlist();
 		Logger.logINFO("Controler", "oeffneGuiMenue", "start", "end");
