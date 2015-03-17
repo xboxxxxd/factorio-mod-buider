@@ -8,6 +8,7 @@ import gui.GuiModlist;
 import gui.GuiPathChoice;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,18 +19,19 @@ public class Controller {
 
 	public final static long FIVE_S_IN_MS = 5000;
 	
-	//Path to Modfolder
-	private static String[] path;
-	//Paths to Modfolders
+
 	private static File[] modList;
 	
 	private static GuiMenue guiMenue;
 	private static GuiModlist guiModlist;
+	//Paths for Mod-folder
+	private static ArrayList<String> path;
 	private static HashMap<String, ModInfo> modInfoList;
 	private static HashMap<String, GuiModInfo> guiModInfoList;
 	private static HashMap<String, GuiEntityInfo> guiEntityInfoList;
 	
 	private Controller(){
+		Controller.path = new ArrayList<String>();
 		Controller.guiModInfoList = new HashMap<String, GuiModInfo>();
 		Controller.modInfoList = new HashMap<String, ModInfo>();
 		Controller.guiEntityInfoList = new HashMap<String, GuiEntityInfo>();
@@ -45,16 +47,16 @@ public class Controller {
 		guiPathChoice.setVisible(true);
 	}
 
-	public static String getPath() { return Controller.path[0]; }
-	public static void setPath(String path) { Controller.path[0] = path; }
+	public static String getPath() { return Controller.path.get(0); }
+	public static void addPath(String path) { Controller.path.add(path); }
 	
 	public static File[] getModArray() { return Controller.modList; }
 	public static void setModArray(File[] modArray) { Controller.modList = modArray; }
 	
 	public static void run() {
 		//setPath(getPath().replace("//", "////"));
-		Controller.setPath(pfade.Pfade.MEINPFAD2);
-		Logger.init(Controller.getPath(), Priority.INFO, Priority.INFO);
+		Controller.path.add(0, pfade.Pfade.MEINPFAD2);
+		Logger.init(Controller.getPath(), Priority.INFO, Priority.JUSTSO);
 		Controller.oeffneGuiMenue();
 		Controller.oeffneGuiModlist();
 		Logger.logINFO("Controler", "oeffneGuiMenue", "start", "end");

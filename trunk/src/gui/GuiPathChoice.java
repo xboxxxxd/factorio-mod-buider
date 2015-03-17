@@ -67,7 +67,11 @@ public class GuiPathChoice extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			Controller.setPath(textField.getText());
+			if(textField.getText() == null){
+				Controller.addPath("");
+			} else {
+				Controller.addPath(textField.getText());
+			}
 			Controller.run();
 			pathchoice.dispose();
 		}
