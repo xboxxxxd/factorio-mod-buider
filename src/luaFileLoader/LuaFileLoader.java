@@ -29,29 +29,50 @@ public class LuaFileLoader {
 	public static LuaDescriptiveFile sortTokens(LuaDescriptiveFile luaDescriptiveFile, LuaTokenLoader luaTokenLoader,  LuaFileLoaderState luaFileLoaderState){
 		Logger.logDEBUG("LuaFileLoader", "sortTokens", "start", "start");
 		
-		while (! luaTokenLoader.eof()) {
+		while (luaTokenLoader.loadToken()) {
 		
 		String token = luaTokenLoader.getToken();
 		
 			switch (luaFileLoaderState){
 			
 			case NOSTATE :
+				
+				// Case for data:extended(
 				if(token.equals("data")){
 					if (luaTokenLoader.getToken().equals(":")) {
 						if (luaTokenLoader.getToken().equals("extend")) {
-							Logger.logDEBUG("LuaFileLoader", "sortTokens", "State", LuaFileLoaderState.DATAEXTENDED.toString());
-							
-							LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile(LuaFileLoaderState.DATAEXTENDED.toString());
-							luaDescriptiveFile.add(luaDescriptiveFileNew);
-							LuaFileLoader.sortTokens(luaDescriptiveFileNew, luaTokenLoader, LuaFileLoaderState.DATAEXTENDED);
-							break;
+							if (luaTokenLoader.getToken().equals("(")) {
+								Logger.logDEBUG("LuaFileLoader", "sortTokens", "State : data:extended(", LuaFileLoaderState.DATAEXTENDED.toString());
+								
+								// Erzeugen des Rekusiven Abstigs
+								LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile(LuaFileLoaderState.DATAEXTENDED.toString());
+								// Abstig und in sliste Aufnehmen
+								luaDescriptiveFile.add(LuaFileLoader.sortTokens(luaDescriptiveFileNew, luaTokenLoader, LuaFileLoaderState.DATAEXTENDED));
+
+								break;
+							} else {
+								Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: (", 
+										LuaFileLoaderState.DATAEXTENDED.toString() + " : " + luaTokenLoader.getToken());
+							}
+						} else {
+							Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: extended",
+									LuaFileLoaderState.DATAEXTENDED.toString() + " : " + luaTokenLoader.getToken());
 						}
+					} else {
+						Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: :",
+								LuaFileLoaderState.DATAEXTENDED.toString() + " : " + luaTokenLoader.getToken());
 					}
 				}
+				// Case end for data:extended( thru )
+				
+				Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token",
+						LuaFileLoaderState.DATAEXTENDED.toString() + " : " + luaTokenLoader.getToken());
 				break;
 				
 			case DATAEXTENDED :
-				
+				if(luaTokenLoader.getToken().equals(")") || luaTokenLoader.getToken().equals("}") || luaTokenLoader.getToken().equals("]") ) {
+					return luaDescriptiveFile;
+				}
 				
 				break;
 				
