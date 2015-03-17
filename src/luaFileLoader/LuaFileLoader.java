@@ -179,6 +179,9 @@ public class LuaFileLoader {
 				
 				} else {
 					
+					// TODO Auflistungen
+					
+					
 					// Creation of the new Object 
 					LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile(luaDescriptiveFile.getKey(), luaTokenLoader.getToken());
 					
