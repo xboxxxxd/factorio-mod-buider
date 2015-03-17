@@ -18,6 +18,12 @@ public class Logger {
 	private static SimpleDateFormat simple1 = new SimpleDateFormat("dd MM yyyy HH mm ss");
 	private static SimpleDateFormat simple2 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
+	/**
+	 * Installs the Logger
+	 * @param path Path for the Log
+	 * @param priorityLog Lowest Priority for the Log
+	 * @param priorityCons Lowest Priority for the Console
+	 */
 	private Logger(String path, Priority priorityLog, Priority priorityCons) {
 		Logger.speicherort = path + "\\Factorio_Mod_Builder";
 		Logger.priorityLog = priorityLog;
@@ -43,7 +49,12 @@ public class Logger {
 		
 	}
 
-	// Erzeugen
+	/**
+	 * Installs the Logger
+	 * @param path Path for the Log
+	 * @param priorityLog Lowest Priority for the Log
+	 * @param priorityCons Lowest Priority for the Console
+	 */
 	public static void init(String path, Priority priorityLog, Priority priorityCons) {
 		new Logger(path, priorityLog, priorityCons);
 	}

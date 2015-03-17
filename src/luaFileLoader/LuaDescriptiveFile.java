@@ -69,4 +69,12 @@ public class LuaDescriptiveFile {
 	public void add(LuaDescriptiveFile item){
 		keyValue.add(item);
 	}
+	
+	public String toString(){
+		if(isLeaf()){
+			return key + " = " + value;
+		} else {
+			return key + " = " + "Not impementet jet";
+		}
+	}
 }

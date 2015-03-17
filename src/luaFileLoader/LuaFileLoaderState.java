@@ -1,6 +1,6 @@
 package luaFileLoader;
 
 public enum LuaFileLoaderState {
-	NOSTATE, DATAEXTENDED
+	NOSTATE, DATAEXTENDED, DATAEXTENDEDLIST
 
 }

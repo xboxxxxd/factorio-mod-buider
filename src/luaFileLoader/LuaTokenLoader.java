@@ -18,10 +18,18 @@ public class LuaTokenLoader {
 		Logger.log(Priority.INFO, "LuaTokenLoader", "LuaTokenLoader", "end", "end");
 	}
 	
+	/**
+	 * Returns the current Token
+	 * @return Current Token
+	 */
 	public String getToken(){
 		return lastToken;
 	}
 	
+	/**
+	 * Loads the next Token and returns if more token are available
+	 * @return if more token are available True else False
+	 */
 	public boolean loadToken(){
 		lastToken = getTokenWork();
 		return ! eof();
@@ -31,7 +39,7 @@ public class LuaTokenLoader {
 		return luaCharLoader.eof();
 	}
 	
-	public String getTokenWork(){
+	private String getTokenWork(){
 		
 		boolean wait_for_token = true;
 		String single = "";
@@ -121,12 +129,4 @@ public class LuaTokenLoader {
 		Logger.log(Priority.ERRORFATALE, "LuaTokenLoader", "getToken", "ERROR", "Something went terrible worng");
 		throw new RuntimeException("LuaTokenLoader getToken ERROR Something went terrible worng");
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }
