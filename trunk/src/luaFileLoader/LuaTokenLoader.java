@@ -10,6 +10,7 @@ import logger.Priority;
 public class LuaTokenLoader {
 
 	private LuaCharLoader luaCharLoader;
+	private String lastToken = "";
 	
 	public LuaTokenLoader(LuaCharLoader luaCharLoader){
 		Logger.log(Priority.INFO, "LuaTokenLoader", "LuaTokenLoader", "start", "start");
@@ -17,11 +18,20 @@ public class LuaTokenLoader {
 		Logger.log(Priority.INFO, "LuaTokenLoader", "LuaTokenLoader", "end", "end");
 	}
 	
+	public String getToken(){
+		return lastToken;
+	}
+	
+	public boolean loadToken(){
+		lastToken = getTokenWork();
+		return ! eof();
+	}
+	
 	public boolean eof(){
 		return luaCharLoader.eof();
 	}
 	
-	public String getToken(){
+	public String getTokenWork(){
 		
 		boolean wait_for_token = true;
 		String single = "";
