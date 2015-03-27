@@ -32,6 +32,7 @@ public class LuaTokenLoader {
 	 */
 	public boolean loadToken(){
 		lastToken = getTokenWork();
+		Logger.logINFO("LuaTokenLoader", "loadToken", "Token ausgeben", lastToken);
 		return ! eof();
 	}
 	
@@ -39,6 +40,34 @@ public class LuaTokenLoader {
 		return luaCharLoader.eof();
 	}
 	
+	/**
+	 * Checks for the given Token
+	 * @param luaTokenLoader
+	 * @param token
+	 * @return true or false
+	 */
+	public boolean tokenIs( String token ){
+		return this.getToken().equals(token);
+	}
+	
+	/**
+	 * Checks for the given Token is in the Array
+	 * @param strings
+	 * @return
+	 */
+	public boolean tokenIsIn(String[] strings) {
+		for(String elem : strings){
+			if( this.getToken().equals(elem)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Function to load the next Token
+	 * @return
+	 */
 	private String getTokenWork(){
 		
 		boolean wait_for_token = true;
@@ -128,5 +157,10 @@ public class LuaTokenLoader {
 		}
 		Logger.log(Priority.ERRORFATALE, "LuaTokenLoader", "getToken", "ERROR", "Something went terrible worng");
 		throw new RuntimeException("LuaTokenLoader getToken ERROR Something went terrible worng");
+	}
+
+	public boolean tokenIs(String[] strings) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
