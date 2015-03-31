@@ -33,10 +33,7 @@ public class LuaFileLoader {
 	 * @return filled luaDescriptiveFile
 	 */
 	public static LuaDescriptiveFile sortTokens(LuaDescriptiveFile luaDescriptiveFile, LuaTokenLoader luaTokenLoader,  LuaFileLoaderState luaFileLoaderState){
-		Logger.logJUSTSO("LuaFileLoader", "sortTokens", "Startstate: " + luaFileLoaderState.toString(), "start");
-		
-		String TempTokenClipOrNoClip = "";
-		
+		Logger.logJUSTSO("LuaFileLoader", "sortTokens", "Startstate: " + luaFileLoaderState.toString(), "start");	
 		
 		while (luaTokenLoader.loadToken()) {
 
@@ -272,7 +269,5 @@ public class LuaFileLoader {
 		return ( luaTokenLoader.tokenIsIn( new String[]{ ")", "}", "]" } ) );
 	}
 		
-		
-	
-	
+
 }
