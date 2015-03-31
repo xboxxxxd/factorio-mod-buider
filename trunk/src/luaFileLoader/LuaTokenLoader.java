@@ -4,6 +4,7 @@ import static luaFileLoader.LuaTokenLoaderState.COMMENT;
 import static luaFileLoader.LuaTokenLoaderState.LONGCOMMAND;
 import static luaFileLoader.LuaTokenLoaderState.OTHER;
 import static luaFileLoader.LuaTokenLoaderState.STRING;
+import static constants.Constants.*;
 import logger.Logger;
 import logger.Priority;
 
@@ -12,6 +13,10 @@ public class LuaTokenLoader {
 	private LuaCharLoader luaCharLoader;
 	private String lastToken = "";
 	
+	/**
+	 * Creates a LuaTokenLoader with a LuaCharLoader to extract token
+	 * @param luaCharLoader A luaCharLoader
+	 */
 	public LuaTokenLoader(LuaCharLoader luaCharLoader){
 		Logger.log(Priority.INFO, "LuaTokenLoader", "LuaTokenLoader", "start", "start");
 		this.luaCharLoader = luaCharLoader;
@@ -36,6 +41,10 @@ public class LuaTokenLoader {
 		return ! eof();
 	}
 	
+	/**
+	 * Checks for eof
+	 * @return true or false
+	 */
 	public boolean eof(){
 		return luaCharLoader.eof();
 	}
@@ -68,38 +77,37 @@ public class LuaTokenLoader {
 	 * Function to load the next Token
 	 * @return
 	 */
-	private String getTokenWork(){
+	private String getTokenWork() {
 		
 		boolean wait_for_token = true;
 		String single = "";
 		String collector = "";
 		LuaTokenLoaderState state = OTHER;
 		
-		while (wait_for_token) {
+		while ( wait_for_token ) {
 			
-			if(luaCharLoader.eof()){ return collector; }
+			if( ! luaCharLoader.setCharAdd() ) { return collector; }
 			
-			single = luaCharLoader.getCharAdd();
+			single = luaCharLoader.getChar();
 
-			switch (state){
+			switch ( state ) {
 			
 			case OTHER :
-				//Look for the beginning of a String by "
-				if(state == OTHER && single.equals("\"") ){ 
+				// Look for the beginning of a String by "
+				if( state == OTHER && single.equals( QUOTATION_MARK ) ) { 
 					state = STRING; collector = collector.concat(single); 
 					break;
 				} else
-				//Look for the beginning of a Command by --
-				if(single.equals("-") && luaCharLoader.getNextChar().equals("-")){ 
-					state = COMMENT; collector = collector.concat(single); 
+				// Look for the beginning of a Command by --
+				if(single.equals( MINUS ) && luaCharLoader.setSecChar( MINUS_ONE ) && luaCharLoader.getSecChar().equals( MINUS ) ) {
+					state = COMMENT; collector = collector.concat(single);  luaCharLoader.setCharAdd();
 					break;
 				} else
-				//lock for a whitespace
-				if( single.equals("\t") || single.equals("\b") || single.equals("\n") || 
-					single.equals("\r") || single.equals("\f") || single.equals(" " ) ){	
+				// Lock for a whitespace
+				if( tokenIsWhitespace( single ) ) {
 					break;
 				} else
-				//Look for a next token Charater	
+				// Look for a next token Charater	
 				if(	single.equals(".") || single.equals(":") || single.equals("(") || single.equals(")") || 
 					single.equals("{") || single.equals("}") || single.equals("[") || single.equals("]") ||
 					single.equals("+") || single.equals("-") || single.equals("*") || single.equals("/") || 
@@ -107,7 +115,7 @@ public class LuaTokenLoader {
 					if(collector.isEmpty()){
 						return single;
 					} else {
-						luaCharLoader.getSub();
+						luaCharLoader.setCharSub();
 						return collector;
 					}
 				}
@@ -131,8 +139,8 @@ public class LuaTokenLoader {
 			case LONGCOMMAND :
 				
 				////Look if Longcommand ends by "
-				if(single.equals("]") && luaCharLoader.getLastChar().equals("]")) { 
-					return collector.concat(single); 
+				if(single.equals( OPEN_SQUARE_BRACE ) && luaCharLoader.setSecChar( MINUS_ONE ) && luaCharLoader.getSecChar().equals( OPEN_SQUARE_BRACE ) ) { 
+					return collector.concat( single ); 
 				}
 				
 				collector = collector + single;
@@ -159,8 +167,15 @@ public class LuaTokenLoader {
 		throw new RuntimeException("LuaTokenLoader getToken ERROR Something went terrible worng");
 	}
 
-	public boolean tokenIs(String[] strings) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean tokenIsWhitespace(String string) {
+		return ( string.equals("\t") || string.equals("\b") || string.equals("\n") || 
+				 string.equals("\r") || string.equals("\f") || string.equals(" " ) );
 	}
+	
+	
+	
+	
+	
+	
+	
 }
