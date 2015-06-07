@@ -1,6 +1,7 @@
 package luaFileLoader;
 
 import logger.Logger;
+import static constants.Constants.*;
 
 public class LuaFileLoader {
 
@@ -8,7 +9,7 @@ public class LuaFileLoader {
 	 *
 	 * @param file the path of the File to load
 	 */
-	public static void loadLuaFile(String file) {
+	public static LuaDescriptiveFile loadLuaFile(String file) {
 		Logger.logDEBUG("LuaFileLoader", "loadLuaFile", "start", "start");
 		Logger.logDEBUG("LuaFileLoader", "loadLuaFile", "file", file);
 		
@@ -16,13 +17,11 @@ public class LuaFileLoader {
 		LuaTokenLoader luaTokenLoader = new LuaTokenLoader(luaCharLoader);
 		LuaDescriptiveFile luaDescriptiveFile = new LuaDescriptiveFile(file);
 		
-		LuaFileLoader.sortTokens(luaDescriptiveFile, luaTokenLoader, LuaFileLoaderState.NOSTATE);
+		LuaDescriptiveFile temp = LuaFileLoader.sortTokens(luaDescriptiveFile, luaTokenLoader, LuaFileLoaderState.NOSTATE);
 		
-		// while (!luaTokenLoader.eof()) {
-		//	Logger.logDEBUG("LuaFileLoader", "loadLuaFile", "Token", luaTokenLoader.getToken());
-		// }
+		Logger.logDEBUG("LuaFileLoader", "loadLuaFile", "end", "end");
 		
-		Logger.logDEBUG("LuaFileLoader", "loadLuaFile", "start", "end");
+		return temp;
 	}
 	
 	/**
@@ -32,26 +31,24 @@ public class LuaFileLoader {
 	 * @param luaFileLoaderState
 	 * @return filled luaDescriptiveFile
 	 */
-	public static LuaDescriptiveFile sortTokens(LuaDescriptiveFile luaDescriptiveFile, LuaTokenLoader luaTokenLoader,  LuaFileLoaderState luaFileLoaderState){
+	public static LuaDescriptiveFile sortTokens(LuaDescriptiveFile luaDescriptiveFile, LuaTokenLoader luaTokenLoader,  LuaFileLoaderState luaFileLoaderState) {
 		Logger.logJUSTSO("LuaFileLoader", "sortTokens", "Startstate: " + luaFileLoaderState.toString(), "start");	
 		
-		while (luaTokenLoader.loadToken()) {
+		while ( luaTokenLoader.loadNextToken() ) {
 
-			switch (luaFileLoaderState){
+			switch (luaFileLoaderState) {
 			
 			case NOSTATE :
 
+				luaTokenLoader.matches("data:extended");
+				
 				
 				// Case for data:extended(
 				if(luaTokenLoader.tokenIs( "data" ) ) {
-					luaTokenLoader.loadToken();
-					if ( luaTokenLoader.tokenIs( ":" ) ) {
-						luaTokenLoader.loadToken();
-						if ( luaTokenLoader.tokenIs( "extend" ) ) {
-							luaTokenLoader.loadToken();
-							if ( luaTokenLoader.tokenIs( "(" ) ) {
-								luaTokenLoader.loadToken();
-								if ( luaTokenLoader.tokenIs( "{" ) ) {
+					if ( receive(luaTokenLoader, COLON, true, "Missing " + COLON + " to open data:extended" + "State: " + LuaFileLoaderState.NOSTATE.toString() ) ) {
+						if ( receive(luaTokenLoader, "extend", true, "Missing " + "extend" + " to open data:extended" + "State: " + LuaFileLoaderState.NOSTATE.toString() ) ) {
+							if ( receive(luaTokenLoader, "(", true, "Missing " + "(" + " to open data:extended" + "State: " + LuaFileLoaderState.NOSTATE.toString() ) ) {
+								if ( receive(luaTokenLoader, "{", true, "Missing " + "{" + " to open data:extended" + "State: " + LuaFileLoaderState.NOSTATE.toString() ) ) {
 									
 									Logger.logDEBUG("LuaFileLoader", "sortTokens", "State : data:extended({", luaFileLoaderState.toString() + " : Start");
 								
@@ -60,126 +57,72 @@ public class LuaFileLoader {
 									// Recursive descent and then adding of the element
 									luaDescriptiveFile.add( sortTokens( luaDescriptiveFileNew, luaTokenLoader, LuaFileLoaderState.DATAEXTENDED ) );
 	
-									Logger.logDEBUG("LuaFileLoader", "sortTokens", "State : data:extended({", LuaFileLoaderState.NOSTATE.toString() + " : End");
+									//receive(luaTokenLoader, "}", true, "Missing } to close the data:extended Block");
+									receive(luaTokenLoader, ")", true, "Missing ) to close the data:extended Block");
+									
+									Logger.logDEBUG("LuaFileLoader", "sortTokens", "State : data:extended({", luaFileLoaderState.toString() + " : End");
 									
 									break;
-								} else {
-									Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: \" { \"", 
-											luaFileLoaderState.toString() + " : " + luaTokenLoader.getToken());
 								}
-							} else {
-								Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: \" ( \"", 
-										luaFileLoaderState.toString() + " : " + luaTokenLoader.getToken());
 							}
-						} else {
-							Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: \" extended \"",
-									luaFileLoaderState.toString() + " : " + luaTokenLoader.getToken());
 						}
-					} else {
-						Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: \" : \"",
-								luaFileLoaderState.toString() + " : " + luaTokenLoader.getToken());
 					}
 				}
 				// Case end for data:extended( thru )
 				
 				Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token",
-						luaFileLoaderState.toString() + " : " + luaTokenLoader.getToken());
+						luaFileLoaderState.toString() + " : " + luaTokenLoader.getCurrentToken());
 				break;
 				
-			case DATAEXTENDED :				
+			case DATAEXTENDED :
 				
-				if ( isOpenClip(luaTokenLoader) ) {
+				if( isClosedClip( luaTokenLoader ) ) {
 					
-					Logger.logINFO("LuaFileLoader", "sortTokens", "State : DATAEXTENDED", " Down: " + luaTokenLoader.getToken());
+					Logger.logINFO("LuaFileLoader", "sortTokens", "State: DATAEXTENDEDLIST", "Up: " + luaTokenLoader.getCurrentToken() + ", File: " + luaDescriptiveFile.toString() );
+
+					return luaDescriptiveFile;
+					
+				} else if( isOpenClip( luaTokenLoader ) ) {
+					
+					Logger.logINFO("LuaFileLoader", "sortTokens", "State: " + luaFileLoaderState.toString(), "Down: " + luaTokenLoader.getCurrentToken());
+						
+					//Check for augment List: "{element,element}"
+					if ( checkForTooAhead(luaTokenLoader, COMMA) ) {
+						
+						Logger.logJUSTSO( "LuaFileLoader", "sortTokens", "State: " + luaFileLoaderState.toString(), " In double list alocation ");
+						
+						luaTokenLoader.loadNextToken();
+						String tempElemOne = luaTokenLoader.getCurrentToken();
+						luaTokenLoader.loadNextToken();
+						luaTokenLoader.loadNextToken();
+						
+						LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile( tempElemOne, luaTokenLoader.getCurrentToken() );
+						Logger.logINFO( "LuaFileLoader", "sortTokens", "State: DATAEXTENDEDLIST", "Forward Too Items: " + luaDescriptiveFileNew.toString() );
+						luaDescriptiveFile.add( luaDescriptiveFileNew );
+						
+						receive( luaTokenLoader, "}" , true, "Missing Closing { after: " + luaDescriptiveFileNew.toString() );
+			
+						break;
+						
+					}
 					
 					// Creation of the new Object for the recursive descent
-					LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile( luaTokenLoader.getToken() );
+					LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile( luaTokenLoader.getCurrentToken() );
 					// recursive descent and then adding of the element
 					luaDescriptiveFile.add( LuaFileLoader.sortTokens( luaDescriptiveFileNew, luaTokenLoader, LuaFileLoaderState.DATAEXTENDED ) );
 					
 					break;
-					
-				} else if ( isClosedClip(luaTokenLoader) ) {
-					
-					Logger.logINFO("LuaFileLoader", "sortTokens", "State : DATAEXTENDED", " Up: " + luaTokenLoader.getToken());
-					
-					return luaDescriptiveFile;
-				}
 				
-				String tempStDaEx = luaTokenLoader.getToken();
-				luaTokenLoader.loadToken();
-				
-				if ( luaTokenLoader.tokenIs( "=" ) ) {
+				} else if ( luaTokenLoader.tokenIs( COMMA ) ) {
 					
-					luaDescriptiveFile.add(clipOrNoClip(luaTokenLoader, luaFileLoaderState, tempStDaEx));
-					break;
-
-				} else {
-					Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: \" = \"",
-							LuaFileLoaderState.DATAEXTENDED.toString() + " : Token before : " + tempStDaEx + " : Token Mismatcht : " + luaTokenLoader.getToken());
-				}
-				
-				break;
-				
-			case DATAEXTENDEDLIST :
-				
-				Logger.logINFO( "LuaFileLoader", "sortTokens", "State : " + luaFileLoaderState.toString(), " isOpenClip() = " + isOpenClip( luaTokenLoader ) );
-				
-				if( isClosedClip( luaTokenLoader ) ) {
-					
-					return luaDescriptiveFile;
-					
-				} else if( isOpenClip( luaTokenLoader ) ) {
-						
-					luaTokenLoader.loadToken();
-					String tempStDaExLI = luaTokenLoader.getToken();
-					luaTokenLoader.loadToken();
-					
-					if ( luaTokenLoader.tokenIs( "=" ) ) {
-						
-						luaDescriptiveFile.add(clipOrNoClip(luaTokenLoader, luaFileLoaderState, tempStDaExLI));
-						break;
-						
-					} else if ( luaTokenLoader.tokenIs( "," ) ) {
-						
-						luaTokenLoader.loadToken();
-						LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile( tempStDaExLI, luaTokenLoader.getToken() );
-						Logger.logINFO( "LuaFileLoader", "sortTokens", "State : DATAEXTENDEDLIST", " Forward Too Items: " + luaDescriptiveFileNew.toString() );
-						luaDescriptiveFile.add( luaDescriptiveFileNew );
-						recive( luaTokenLoader, "}" );
-						recive( luaTokenLoader, "," );
-						break;
-						
-					} else {
-						Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: \" = \" or \" , \"",
-							luaFileLoaderState.toString() + " : Token before : " + tempStDaExLI + " : Token Mismatcht : " + luaTokenLoader.getToken());
-					}
+					Logger.logINFO("LuaFileLoader", "sortTokens", "State: DATAEXTENDEDLIST", "Forward found colon");
 					
 					break;
-				
+					
 				} else {
+	
+					luaDescriptiveFile.add( allocation( luaTokenLoader, luaFileLoaderState ) );
 					
-					String tempStDaExLI = luaTokenLoader.getToken();
-					luaTokenLoader.loadToken();
-					
-					if ( luaTokenLoader.tokenIs( "}" ) ) {
-						
-						// Creation of the new Object to replace the branch with a leave
-						LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile(luaDescriptiveFile.getKey(), tempStDaExLI);
-						
-						Logger.logINFO( "LuaFileLoader", "sortTokens", "State : " + luaFileLoaderState.toString(), " Special Forward: " + tempStDaExLI );
-						
-						return luaDescriptiveFileNew;
-					
-					} else if ( luaTokenLoader.tokenIs( "=" ) ) {	
-						
-						luaDescriptiveFile.add(clipOrNoClip(luaTokenLoader, luaFileLoaderState, tempStDaExLI));
-						break;
-						
-				 	} else {
-						Logger.logERRORMOD("LuaFileLoader", "sortTokens", "State : Unexepectet Token shoud be: \" } \"",
-								luaFileLoaderState.toString() + " : Token before : " + luaDescriptiveFile.getKey() + " : Token Mismatcht : " + luaTokenLoader.getToken());
-					}
 					break;
 				}			
 			}		
@@ -190,65 +133,110 @@ public class LuaFileLoader {
 	}
 	
 	
-	private static LuaDescriptiveFile clipOrNoClip(LuaTokenLoader luaTokenLoader, LuaFileLoaderState luaFileLoaderState, String typeToken) {
+	private static LuaDescriptiveFile allocation( LuaTokenLoader luaTokenLoader, LuaFileLoaderState luaFileLoaderState) {
 
-		luaTokenLoader.loadToken();
+		Logger.logINFO("LuaFileLoader", "allocation", "State: " + luaFileLoaderState.toString(), "Need a ALLOCATION for Type: " + luaTokenLoader.getCurrentToken() );
 		
-		if ( isOpenClip( luaTokenLoader ) ) {
-
-			// Creation of the new Object for the recursive descent
-			LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile(typeToken);
+		String tempType = luaTokenLoader.getCurrentToken();
+		luaTokenLoader.loadNextToken();
+		
+		//Precondition check if it is a allocation
+		if ( ! luaTokenLoader.tokenIs( ALLOCATION ) ) {
 			
-			Logger.logINFO("LuaFileLoader", "clipOrNoClip", "State : " + luaFileLoaderState.toString(), " Forward Down: " +  luaDescriptiveFileNew.toString());
+			Logger.logERRORMOD( "LuaFileLoader", "sortTokens", "State: " + luaFileLoaderState.toString() +  " For type: " + tempType,
+					"Expectet \"" + ALLOCATION + "\" but was \"" + luaTokenLoader.getCurrentToken() + "\"");
+		}
+		
+		luaTokenLoader.loadNextToken();
+		
+		Logger.logINFO( "LuaFileLoader", "allocation", "State: " + luaFileLoaderState.toString(), "isOpenClip() = " + isOpenClip( luaTokenLoader ) );
+		
+		//Starts List
+		if ( isOpenClip( luaTokenLoader ) ) {
+			
+			if( checkForTooAhead(luaTokenLoader, "}") ) {
+				
+				luaTokenLoader.loadNextToken();
+				
+				// Creation of the new Object to replace the branch with a leave
+				LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile( tempType, luaTokenLoader.getCurrentToken() );
+				
+				luaTokenLoader.loadNextToken();
+				
+				Logger.logINFO( "LuaFileLoader", "sortTokens", "State: " + luaFileLoaderState.toString(), "Special Forward: " + luaDescriptiveFileNew.toString() );
+				
+				return luaDescriptiveFileNew;
+			}
+			
+			// Creation of the new Object for the recursive descent
+			LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile(tempType);
+			
+			Logger.logINFO( "LuaFileLoader", "allocation", "State: " + luaFileLoaderState.toString(), "Forward Down: " +  luaDescriptiveFileNew.toString() );
 			
 			// recursive descent and then adding of the element
-			luaDescriptiveFileNew = LuaFileLoader.sortTokens(luaDescriptiveFileNew, luaTokenLoader, LuaFileLoaderState.DATAEXTENDEDLIST);
+			luaDescriptiveFileNew = LuaFileLoader.sortTokens( luaDescriptiveFileNew, luaTokenLoader, LuaFileLoaderState.DATAEXTENDED );
 
-			reciveComma(luaTokenLoader);
-			
 			return luaDescriptiveFileNew;
 			
 		} else {
 			
 			// Creation of the new Object 
-			LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile(typeToken, luaTokenLoader.getToken());
+			LuaDescriptiveFile luaDescriptiveFileNew = new LuaDescriptiveFile( tempType, luaTokenLoader.getCurrentToken() );
 			
-			Logger.logINFO("LuaFileLoader", "clipOrNoClip", "State : " + luaFileLoaderState.toString(), " Forward: " + luaDescriptiveFileNew.toString());
-
-			reciveComma(luaTokenLoader);
+			Logger.logINFO( "LuaFileLoader", "allocation", "State: " + luaFileLoaderState.toString(), "Forward: " + luaDescriptiveFileNew.toString() );
 			
 			return luaDescriptiveFileNew;
 		}
 	}
 	
 	
-	
 	/**
-	 * Loads the next token and awaits a " , " if not writs a logERRORMOD
-	 * @param luaTokenLoader
-	 * @return true or false
+	 * Do's check for a given token too ahead without changing the current token
 	 */
-	private static boolean reciveComma(LuaTokenLoader luaTokenLoader) {
-		return recive(luaTokenLoader, ",");
-	}
-	
-	/**
-	 * Loads the next token and awaits token if not writs a logERRORMOD
-	 * @param luaTokenLoader
-	 * @param token
-	 * @return true or false
-	 */
-	private static boolean recive(LuaTokenLoader luaTokenLoader, String token) {
-		
-		luaTokenLoader.loadToken();
-		
-		if ( luaTokenLoader.tokenIs(token) ) {
+	private static boolean checkForTooAhead(LuaTokenLoader luaTokenLoader, String token) {
+		luaTokenLoader.loadNextToken();
+		luaTokenLoader.loadNextToken();
+		if( luaTokenLoader.tokenIs( token ) ) {
+			luaTokenLoader.offsetPointer(MINUS_TOO);
 			return true;
 		} else {
-			Logger.logERRORMOD("LuaFileLoader", "reciveComma", "token not expectet shoud be \" " + token + " \" was", luaTokenLoader.getToken());
+			luaTokenLoader.offsetPointer(MINUS_TOO);
 			return false;
 		}
+	}
+	
+	
+	/**
+	 * Loads the next token and awaits a given Token if not go's back a token, is able to print error-massage
+	 * @param luaTokenLoader
+	 * @param token
+	 * @param error Print error-massage or not
+	 * @param massage
+	 * @return if Token is found successful
+	 */
+	private static boolean receive(LuaTokenLoader luaTokenLoader, String token, boolean error, String massage) {
 		
+		luaTokenLoader.loadNextToken();
+		
+		if ( luaTokenLoader.tokenIs(token) ) {
+			
+			return true;
+	
+		} else if ( error ) {
+			
+			Logger.logERRORMOD("LuaFileLoader", "recive",  
+					"token not expectet shoud be \" " + token + " \" was: \"", 
+					luaTokenLoader.getCurrentToken() + "\", Massage : " + massage);
+		} 
+		
+		if ( ! luaTokenLoader.offsetPointer( MINUS_ONE ) ) {
+
+			Logger.logERRORFATALE( "LuaFileLoader",  "recive", 
+					"token not expectet, and cood not go back a Token, shoud be \" " + token + " \" was", 
+					luaTokenLoader.getCurrentToken() + ", Massage : " + massage );
+		}
+		
+		return false;
 	}	
 	
 	/**

@@ -56,61 +56,61 @@ public class Controller {
 	public static void run() {
 		//setPath(getPath().replace("//", "////"));
 		Controller.path.add(0, pfade.Pfade.MEINPFAD2);
-		Logger.init(Controller.getPath(), Priority.INFO, Priority.JUSTSO);
+		Logger.init(Controller.getPath(), Priority.INFO, Priority.DEBUG);
 		Controller.oeffneGuiMenue();
 		Controller.oeffneGuiModlist();
-		Logger.logINFO("Controler", "oeffneGuiMenue", "start", "end");
+		Logger.logINFO("Controller", "oeffneGuiMenue", "start", "end");
 	}
 	
 	//GuiMangement
 	public static void oeffneGuiMenue(){
-		Logger.logINFO("Controler", "oeffneGuiMenue", "start", "start");
+		Logger.logINFO("Controller", "oeffneGuiMenue", "start", "start");
 		if(guiMenue == null){ guiMenue = new GuiMenue(); }
 		guiMenue.setVisible(true);
 	}
 	
 	public void schliesseGuiMenue(){
-		Logger.logINFO("Controler", "schliesseGuiMenue", "start", "start");
+		Logger.logINFO("Controller", "schliesseGuiMenue", "start", "start");
 		if(guiMenue != null){ guiMenue.setVisible(false); }
 	}
 	
 	public static void oeffneGuiModlist(){
-		Logger.logINFO("Controler", "oeffneGuiModlist", "start", "start");
+		Logger.logINFO("Controller", "oeffneGuiModlist", "start", "start");
 		if(guiModlist == null){ guiModlist = new GuiModlist(); }
 		guiModlist.setVisible(true);
 		actuallisire_modordner();
 	}
 	
 	public void schliesseGuiModInfo(){
-		Logger.logINFO("Controler", "schliesseGuiModInfo", "start", "start");
+		Logger.logINFO("Controller", "schliesseGuiModInfo", "start", "start");
 		//TODO
 	}
 	
 	public static void oeffneGuiModInfo(ModInfo modInfo){
-		Logger.logINFO("Controler", "oeffneGuiModInfo", "start", "start");
+		Logger.logINFO("Controller", "oeffneGuiModInfo", "start", "start");
 		if(guiModInfoList.get(modInfo.pfad) == null){ guiModInfoList.put(modInfo.pfad, new GuiModInfo(modInfo)); modInfo.loadInfo();}
 		guiModInfoList.get(modInfo.pfad).setVisible(true);
 	}
 	
 	public void schliesseGuiModlist(ModInfo modInfo){
-		Logger.logINFO("Controler", "schliesseGuiModlist", "start", "start");
+		Logger.logINFO("Controller", "schliesseGuiModlist", "start", "start");
 		if(guiModInfoList.get(modInfo.pfad) != null){ guiModInfoList.get(modInfo.pfad).setVisible(false); }
 	}
 	
 	public static void oeffneGuiEntityInfo(ModInfo modInfo){
-		Logger.logINFO("Controler", "oeffneGuiEntityInfo", "start", "start");
+		Logger.logINFO("Controller", "oeffneGuiEntityInfo", "start", "start");
 		if(guiEntityInfoList.get(modInfo.pfad) == null){ guiEntityInfoList.put(modInfo.pfad, new GuiEntityInfo(modInfo)); modInfo.loadInfo();}
 		guiEntityInfoList.get(modInfo.pfad).setVisible(true);
 	}
 	
 	public void schliesseGuiEntitylist(ModInfo modInfo){
-		Logger.logINFO("Controler", "schliesseGuiEntitylist", "start", "start");
+		Logger.logINFO("Controller", "schliesseGuiEntitylist", "start", "start");
 		if(guiEntityInfoList.get(modInfo.pfad) != null){ guiEntityInfoList.get(modInfo.pfad).setVisible(false); }
 	}
 	
 	//Close all
 	public static void closeAll() {
-		Logger.logINFO("Controler", "closeAll", "start", "start");
+		Logger.logINFO("Controller", "closeAll", "start", "start");
 		
 		if(guiMenue != null){ guiMenue.dispose(); }
 		if(guiModlist != null){ guiModlist.dispose(); }
@@ -123,7 +123,7 @@ public class Controller {
 			guiEntityInfoList.get(key).dispose();
 		}
 		
-		Logger.logINFO("Controler", "closeAll", "start", "end");
+		Logger.logINFO("Controller", "closeAll", "start", "end");
 		Logger.closeFile();
 	}
 	
@@ -132,7 +132,7 @@ public class Controller {
 	 * Öffnet die Gui für die Mods
 	 */
 	public static void actuallisire_modordner(){
-		Logger.logINFO("Controler", "actuallisire_modordner", "start", "start");
+		Logger.logINFO("Controller", "actuallisire_modordner", "start", "start");
 		File file = new File(Controller.getPath());
 		modList = file.listFiles();
 		if(guiModlist != null){ guiModlist.aktuallisireListe(); }
@@ -143,11 +143,11 @@ public class Controller {
 	 * @param selectedValuesList
 	 */
 	public static void oeffneGuiModInfo(List<File> selectedValuesList) {
-		Logger.logINFO("Controler", "oeffneGuiModInfo", "start", "start");
+		Logger.logINFO("Controller", "oeffneGuiModInfo", "start", "start");
 		for(File file : selectedValuesList){
-			Logger.log(Priority.DEBUG,"Controler", "oeffneGuiModInfo", "Test", "Constructor info next");
+			Logger.log(Priority.DEBUG,"Controller", "oeffneGuiModInfo", "Test", "Constructor info next");
 			ModInfo modInfo = new ModInfo(file.toString());
-			Logger.log(Priority.DEBUG,"Controler", "oeffneGuiModInfo", "Test", modInfo.entityTypeList.keySet().toString() + " " + (modInfo == null) + " " + (modInfo.equals(null)));
+			Logger.log(Priority.DEBUG,"Controller", "oeffneGuiModInfo", "Test", modInfo.entityTypeList.keySet().toString() + " " + (modInfo == null) + " " + (modInfo.equals(null)));
 			modInfoList.put(modInfo.pfad, modInfo);
 			oeffneGuiModInfo(modInfo);
 		}
@@ -158,10 +158,10 @@ public class Controller {
 	 * @param modInfo
 	 */
 	public static void openEntityList(ModInfo modInfo) {
-		Logger.logINFO("Controler", "openEntityList", "start", "start");
+		Logger.logINFO("Controller", "openEntityList", "start", "start");
 		modInfo.loadEntityList();
 		Controller.oeffneGuiEntityInfo(modInfo);
-		Logger.logINFO("Controler", "openEntityList", "start", "end");
+		Logger.logINFO("Controller", "openEntityList", "start", "end");
 	}
 	
 }
