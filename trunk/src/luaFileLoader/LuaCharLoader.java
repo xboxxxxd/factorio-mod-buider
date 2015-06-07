@@ -26,6 +26,11 @@ public class LuaCharLoader {
 		
 			try {
 				
+				/*
+				Path inputpath = Paths.get("hello.txt");
+				List<String> inputlines = Files.readAllLines(inputpath, StandardCharsets.UTF_8);
+				*/
+				
 				FileReader fileReader = new FileReader(file);
 				BufferedReader bufferedReader = new BufferedReader(fileReader);
 				ArrayList<Character> charlist = new ArrayList<Character>();
@@ -87,7 +92,7 @@ public class LuaCharLoader {
 		}
 	}
 	
-	public boolean setCharSub() {
+	public boolean setCharBefore() {
 		if( this.isVallidPos( this.pos - 1 ) ) {
 			this.pos = this.pos - 1;
 			return true;
@@ -97,7 +102,11 @@ public class LuaCharLoader {
 		}
 	}
 	
-	public boolean setCharAdd() {
+	/**
+	 * Sets the Pointer on the next char
+	 * @return Returns if possible or not
+	 */
+	public boolean setCharNext() {
 		if( this.isVallidPos( this.pos + 1 ) ) {
 			this.pos = this.pos + 1;
 			Logger.log( Priority.ALL, "LuaCharLoader", "setCharAdd", "Number true", "" + ( this.pos) );

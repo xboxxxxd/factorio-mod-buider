@@ -74,7 +74,7 @@ public class LuaDescriptiveFile {
 		if(isLeaf()){
 			return key + " = " + value;
 		} else {
-			return key + " = " + "Not impementet jet";
+			return key + " = " + "Not implemented jet";
 		}
 	}
 }
